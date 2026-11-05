@@ -442,77 +442,7 @@ button[type="submit"]:disabled {
   }
 }
 .summary {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-bottom: 24px;
-  width: 100%;
-  box-sizing: border-box;
-}
-@media (max-width: 440px) {
-  .summary {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-  .stat:last-child {
-    grid-column: span 2;
-  }
-}
-@media (min-width: 480px) and (max-width: 767px) {
-  .summary {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-}
-@media (min-width: 768px) {
-  .summary {
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-  }
-}
-.stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 12px 14px;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 72px;
-  box-sizing: border-box;
-}
-@media (max-width: 440px) {
-  .stat {
-    padding: 10px 12px;
-    min-height: 64px;
-  }
-  .stat .value {
-    font-size: 18px;
-  }
-}
-.stat .label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-dim);
-  display: block;
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-.stat .value {
-  font-family: var(--mono);
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.2;
-  display: block;
-  white-space: nowrap;
-}
-.stat .sublabel {
-  font-size: 10px;
-  color: var(--text-faint);
-  margin-top: 3px;
-  font-family: var(--mono);
+  display: none !important;
 }
 .table-wrap {
   width: 100%;
@@ -1848,13 +1778,6 @@ footer.fixed-footer {
     }
 
     res.innerHTML = semBarHtml
-      + '<div class="summary">'
-      + '<div class="stat"><span class="label">overall</span><span class="value" style="color:' + pctColor(o.pct) + '">' + esc(o.pct.toFixed(2)) + '%</span><span class="sublabel">' + (o.total || 0) + ' held</span></div>'
-      + '<div class="stat"><span class="label">present</span><span class="value" style="color:var(--ok)">' + esc(o.present) + '</span><span class="sublabel">attended</span></div>'
-      + '<div class="stat"><span class="label">absent</span><span class="value" style="color:var(--bad)">' + esc(o.absent) + '</span><span class="sublabel">missed</span></div>'
-      + '<div class="stat"><span class="label">leave</span><span class="value" style="color:var(--text-dim)">' + esc(o.leave) + '</span><span class="sublabel">approved</span></div>'
-      + '<div class="stat"><span class="label">remaining</span><span class="value" style="color:var(--text)">' + esc(o.remaining != null ? o.remaining : '--') + '</span><span class="sublabel">' + (o.scheduled ? o.scheduled + ' in sem' : 'classes left') + '</span></div>'
-      + '</div>'
       + '<div class="table-wrap">'
       + '<table>'
       + '<thead><tr><th class="col-course">Course</th><th class="col-pct">%</th><th class="col-pal">P / A / L</th><th class="col-rem">Left</th><th class="col-status">Status</th></tr></thead>'
