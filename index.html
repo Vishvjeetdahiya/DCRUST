@@ -8,22 +8,25 @@
 <meta http-equiv="Expires" content="0">
 <title>DCRUSTM Attendance</title>
 <meta name="description" content="Check your DCRUSTM attendance from dcrustm.samarth.edu.in. Enter your roll number and password to view class-wise attendance.">
+<meta name="theme-color" content="#000000" id="meta-theme-color">
 <script src="./config.js"></script>
 <script>
 (function() {
   var t = localStorage.getItem('dcrustm_theme');
   if (t === 'light') {
     document.documentElement.setAttribute('data-theme', 'light');
+    var m = document.getElementById('meta-theme-color');
+    if (m) m.setAttribute('content', '#f5f7fa');
   }
 })();
 </script>
 <style>
 :root {
-  --bg: #0b0c0e;
-  --surface: #131519;
-  --surface-2: #1a1d22;
-  --border: #23262c;
-  --border-strong: #34383f;
+  --bg: #000000;
+  --surface: #0e1013;
+  --surface-2: #16181d;
+  --border: #202328;
+  --border-strong: #30343c;
   --text: #d5d7dc;
   --text-dim: #868b94;
   --text-faint: #4f545c;
@@ -32,11 +35,11 @@
   --warn: #c99a4f;
   --bad: #c26060;
   --submit-bg: #ffffff;
-  --submit-text: #0b0c0e;
+  --submit-text: #000000;
   --submit-hover: #e2e4e9;
-  --footer-bg: rgba(11, 12, 14, 0.95);
-  --details-bg: #0d0f12;
-  --shadow: rgba(0, 0, 0, 0.35);
+  --footer-bg: rgba(0, 0, 0, 0.95);
+  --details-bg: #060708;
+  --shadow: rgba(0, 0, 0, 0.6);
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
 }
@@ -67,6 +70,7 @@ html {
   width: 100% !important;
   max-width: 100% !important;
   -webkit-text-size-adjust: 100%;
+  background: var(--bg);
 }
 body {
   background: var(--bg);
@@ -1951,6 +1955,8 @@ footer.fixed-footer {
         } else {
           document.documentElement.removeAttribute('data-theme');
         }
+        var metaTheme = document.getElementById('meta-theme-color');
+        if (metaTheme) metaTheme.setAttribute('content', nextTheme === 'light' ? '#f5f7fa' : '#000000');
         try {
           localStorage.setItem('dcrustm_theme', nextTheme);
         } catch (_) {}
