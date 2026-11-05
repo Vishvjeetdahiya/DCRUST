@@ -947,8 +947,7 @@ footer.fixed-footer {
     grid-template-columns: 1fr auto !important;
     grid-template-areas:
       "course pct"
-      "pal    rem"
-      "status status" !important;
+      "status rem" !important;
     gap: 6px 8px !important;
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
@@ -993,86 +992,58 @@ footer.fixed-footer {
     min-width: 0 !important;
     width: auto !important;
   }
-  .pal-cell {
-    grid-area: pal !important;
+  .course-row .pal-cell {
+    display: none !important;
+  }
+  .status-cell {
+    grid-area: status !important;
     padding: 0 !important;
     border: none !important;
     display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 2px !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
     min-width: 0 !important;
-    width: auto !important;
   }
-  .pal-cell .cell-label {
-    display: block !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    color: var(--text-faint) !important;
-    letter-spacing: 0.5px !important;
-    font-family: var(--mono) !important;
-    line-height: 1.2 !important;
-  }
-  .pal-cell .cell-val {
-    display: block !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: var(--text) !important;
-    font-family: var(--mono) !important;
-    letter-spacing: 0.3px !important;
-    line-height: 1.2 !important;
-    white-space: nowrap !important;
+  .status-wrap {
+    align-items: flex-start !important;
   }
   .rem-cell {
     grid-area: rem !important;
     padding: 0 !important;
     border: none !important;
     display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-end !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
     gap: 2px !important;
     text-align: right !important;
     min-width: 0 !important;
     width: auto !important;
   }
   .rem-cell .cell-label {
-    display: block !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    color: var(--text-faint) !important;
-    letter-spacing: 0.5px !important;
-    font-family: var(--mono) !important;
-    text-align: right !important;
-    line-height: 1.2 !important;
+    display: none !important;
   }
   .rem-cell .cell-val {
-    display: block !important;
-    font-size: 13px !important;
+    display: inline-flex !important;
+    align-items: baseline !important;
+    font-size: 12px !important;
     font-weight: 600 !important;
-    color: var(--text) !important;
+    color: var(--text-dim) !important;
     font-family: var(--mono) !important;
     text-align: right !important;
     line-height: 1.2 !important;
     white-space: nowrap !important;
   }
+  .rem-val {
+    color: var(--text) !important;
+  }
   .rem-sub {
     display: inline !important;
-    margin-left: 3px !important;
-    font-size: 11px !important;
-    color: var(--text-dim) !important;
+    margin-left: 2px !important;
+    font-size: 10.5px !important;
+    color: var(--text-faint) !important;
     font-weight: 400 !important;
-  }
-  .status-cell {
-    grid-area: status !important;
-    padding: 8px 0 0 0 !important;
-    border: none !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    text-align: left !important;
-    min-width: 0 !important;
-    width: 100% !important;
   }
   .status-wrap {
     align-items: flex-start !important;
@@ -1676,58 +1647,32 @@ footer.fixed-footer {
 
       if (c.total === 0) {
         statusHtml = '<span class="status-pill pill-none">not marked yet</span>';
-        if (sched > 0) {
-          var initialSafe = Math.floor(0.25 * sched);
-          projMsg = 'No classes held yet (<strong>' + sched + '</strong> scheduled). Safe bunks: <strong>' + initialSafe + '</strong> (&ge; 75%).';
-        }
+        projMsg = sched > 0
+          ? 'No classes held yet (<strong>' + sched + '</strong> scheduled).'
+          : 'No classes held yet.';
       } else if (c.pct >= 75) {
         var rawSafeNow = Math.floor((c.present - 0.75 * c.total) / 0.75);
         var safeNow = sched > 0 ? Math.min(rem, Math.max(0, rawSafeNow)) : Math.max(0, rawSafeNow);
-        var rawSafeSem = Math.floor(c.present + 0.25 * rem - 0.75 * c.total);
-        var safeSem = sched > 0 ? Math.max(safeNow, Math.min(rem, Math.max(0, rawSafeSem))) : safeNow;
 
         if (sched > 0 && rem === 0) {
           statusHtml = '<span class="status-pill pill-ok">completed</span>';
-          projMsg = 'All scheduled classes completed. Final attendance: <strong>' + c.pct.toFixed(2) + '%</strong>.';
+          projMsg = 'Completed at <strong>' + c.pct.toFixed(2) + '%</strong>.';
         } else if (safeNow > 0) {
           statusHtml = '<span class="status-pill pill-ok">safe bunks ' + safeNow + '</span>';
-          if (sched > 0 && safeSem === rem && rem > 0) {
-            var minFinalPct = +((c.present) / (c.total + rem) * 100).toFixed(2);
-            projMsg = 'Current attendance: <strong>' + c.pct.toFixed(2) + '%</strong>. You have <strong>' + rem + '</strong> remaining classes in the semester. You can safely bunk all <strong>' + rem + '</strong> of them and still finish at <strong>' + minFinalPct + '%</strong> (&ge; 75%).';
-          } else if (sched > 0 && safeSem > safeNow) {
-            projMsg = 'Current attendance: <strong>' + c.pct.toFixed(2) + '%</strong>. You have <strong>' + rem + '</strong> remaining classes in the semester. You can safely bunk up to <strong>' + safeSem + '</strong> of them in total (or up to <strong>' + safeNow + '</strong> consecutively right now) while keeping attendance &ge; 75%.';
-          } else {
-            projMsg = 'Current attendance: <strong>' + c.pct.toFixed(2) + '%</strong>. You can safely bunk up to <strong>' + safeNow + '</strong> consecutive classes while keeping attendance &ge; 75%.';
-          }
+          projMsg = 'Current safe bunks: <strong>' + safeNow + '</strong> (attendance stays &ge; 75%).';
         } else {
           statusHtml = '<span class="status-pill pill-warn">on edge 0 bunks</span>';
-          if (sched > 0 && safeSem > 0) {
-            var needAttend = rem - safeSem;
-            projMsg = 'Current attendance: <strong>' + c.pct.toFixed(2) + '%</strong>. You have <strong>' + rem + '</strong> remaining classes. You are on the edge right now (0 consecutive bunks), but across the semester you can safely bunk up to <strong>' + safeSem + '</strong> classes if you attend at least <strong>' + needAttend + '</strong>.';
-          } else {
-            projMsg = 'Current attendance: <strong>' + c.pct.toFixed(2) + '%</strong>. You cannot afford to miss any classes without dropping below 75%.';
-          }
+          projMsg = 'On the edge (<strong>0</strong> safe bunks). Missing next class drops below 75%.';
         }
       } else {
         // Below 75%
         var rawNeed = Math.max(0, Math.ceil(3 * c.absent - c.present));
         if (sched > 0 && rem === 0) {
           statusHtml = '<span class="status-pill pill-bad">short attendance</span>';
-          projMsg = 'All scheduled classes completed. Final attendance: <strong>' + c.pct.toFixed(2) + '%</strong> (short of 75% requirement by ' + rawNeed + ' classes).';
-        } else if (rem > 0) {
-          var maxPossiblePct = +((c.present + rem) / (c.total + rem) * 100).toFixed(1);
-          if (rawNeed > rem) {
-            // Cannot reach 75% even if attending all remaining classes!
-            statusHtml = '<span class="status-pill pill-critical">attend ' + rem + ' classes</span>';
-            projMsg = 'Attendance is below 75% (' + c.pct.toFixed(2) + '%). Even if you attend all <strong>' + rem + '</strong> remaining classes in the semester, your final attendance will reach <strong style="color:var(--bad)">' + maxPossiblePct + '%</strong> (cannot reach 75%).';
-          } else {
-            // Can reach 75%
-            statusHtml = '<span class="status-pill pill-bad">attend ' + rawNeed + ' classes</span>';
-            projMsg = 'Attend <strong>' + rawNeed + '</strong> more classes to recover to 75.0%. If you attend all <strong>' + rem + '</strong> remaining classes, you will finish at <strong style="color:' + pctColor(maxPossiblePct) + '">' + maxPossiblePct + '%</strong>.';
-          }
+          projMsg = 'Completed at <strong>' + c.pct.toFixed(2) + '%</strong> (short of 75%).';
         } else {
           statusHtml = '<span class="status-pill pill-bad">attend ' + rawNeed + ' classes</span>';
-          projMsg = 'Needs <strong>' + rawNeed + '</strong> more classes to reach 75%, but no more classes are scheduled.';
+          projMsg = 'Attend next <strong>' + rawNeed + '</strong> class' + (rawNeed === 1 ? '' : 'es') + ' to reach 75%.';
         }
       }
 
@@ -1762,10 +1707,15 @@ footer.fixed-footer {
           + '</div>';
       }
 
+      var palStat = '<span class="details-stat">'
+        + (c.total === 0 ? 'P / A / L: --' : ('P: ' + esc(c.present) + ' &bull; A: ' + esc(c.absent) + ' &bull; L: ' + esc(c.leave)))
+        + '</span>';
+
       var detailsHtml = '<div class="details-wrap">'
         + '<div class="details-header">'
         + '<div class="details-title-row">'
         + '<span class="details-teacher">Teacher: ' + esc(c.teacher || '--') + '</span>'
+        + palStat
         + (sched > 0 ? '<span class="details-stat">' + rem + ' of ' + sched + ' classes left</span>' : '')
         + '</div>'
         + filterPills
