@@ -9,6 +9,9 @@
 <title>DCRUSTM Attendance</title>
 <meta name="description" content="Check your DCRUSTM attendance from dcrustm.samarth.edu.in. Enter your roll number and password to view class-wise attendance.">
 <meta name="theme-color" content="#000000" id="meta-theme-color">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="./config.js"></script>
 <script>
 (function() {
@@ -40,8 +43,8 @@
   --footer-bg: rgba(0, 0, 0, 0.95);
   --details-bg: #060708;
   --shadow: rgba(0, 0, 0, 0.6);
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+  --sans: 'Nanum Gothic', sans-serif;
+  --mono: 'Nanum Gothic', sans-serif;
 }
 
 [data-theme="light"] {
@@ -72,10 +75,12 @@ html {
   -webkit-text-size-adjust: 100%;
   background: var(--bg);
 }
+html, body, button, input, select, textarea {
+  font-family: 'Nanum Gothic', sans-serif;
+}
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
   font-size: 15px;
   line-height: 1.6;
   margin: 0;
@@ -91,7 +96,7 @@ body {
   box-sizing: border-box;
 }
 @media (max-width: 520px) {
-  .wrap { padding: 20px 14px max(85px, calc(70px + env(safe-area-inset-bottom, 16px))); }
+  .wrap { padding: 12px 10px max(75px, calc(65px + env(safe-area-inset-bottom, 16px))); }
 }
 header {
   display: flex;
@@ -127,8 +132,14 @@ header {
   flex: 1;
 }
 @media (max-width: 520px) {
+  header { margin-bottom: 8px; }
+  .header-bar { margin-bottom: 0; }
   .site-title {
-    font-size: 24px;
+    font-size: 21px;
+  }
+  .theme-toggle, .header-spacer {
+    width: 32px;
+    height: 32px;
   }
 }
 .theme-toggle {
@@ -161,14 +172,6 @@ header {
 :root .icon-moon { display: none; }
 [data-theme="light"] .icon-sun { display: none; }
 [data-theme="light"] .icon-moon { display: block; }
-.intro {
-  color: var(--text-dim);
-  max-width: 52ch;
-  margin: 0 auto 28px auto;
-  font-size: 14px;
-  line-height: 1.6;
-  text-align: center;
-}
 #form {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -177,13 +180,6 @@ header {
   margin-bottom: 24px;
   box-shadow: 0 4px 20px var(--shadow);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-@media (max-width: 520px) {
-  #form {
-    padding: 16px;
-    margin-bottom: 18px;
-    border-radius: 6px;
-  }
 }
 .form-inputs {
   display: flex;
@@ -317,13 +313,68 @@ button[type="submit"]:disabled {
   cursor: not-allowed;
 }
 @media (max-width: 520px) {
-  .form-btn-row {
-    flex-direction: column-reverse;
-    gap: 10px;
+  #form {
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    border-radius: 6px;
   }
-  .btn-forgot,
+  .form-inputs {
+    gap: 8px;
+  }
+  .field {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .field-label {
+    margin-bottom: 0;
+    width: 66px;
+    min-width: 66px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .field .form-input,
+  .field .pw-wrap {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .form-input {
+    height: 38px;
+    font-size: 14px;
+    padding: 0 10px;
+  }
+  .pw-wrap .form-input {
+    padding-right: 40px;
+  }
+  .pw-toggle {
+    width: 36px;
+  }
+  .form-btn-row {
+    flex-direction: row;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .btn-forgot {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+    font-size: 12px;
+    padding: 0 8px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   button[type="submit"] {
-    width: 100%;
+    flex: 1.35;
+    min-width: 0;
+    height: 38px;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 0 10px;
+    white-space: nowrap;
   }
 }
 #err {
@@ -341,6 +392,16 @@ button[type="submit"]:disabled {
 }
 #res {
   margin-top: 32px;
+}
+@media (max-width: 520px) {
+  #err {
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+  #res {
+    margin-top: 14px;
+  }
 }
 .sem-bar {
   display: flex;
@@ -437,12 +498,14 @@ button[type="submit"]:disabled {
 }
 @media (max-width: 520px) {
   .sem-bar {
-    padding: 8px 12px;
+    padding: 6px 10px;
     gap: 8px;
+    margin-bottom: 10px;
   }
   .sem-select {
     font-size: 12px;
-    padding: 6px 26px 6px 10px;
+    padding: 5px 22px 5px 8px;
+    height: 32px;
   }
 }
 .summary {
@@ -888,7 +951,7 @@ footer.fixed-footer {
   tbody {
     display: flex !important;
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 8px !important;
     width: 100% !important;
   }
   .course-row {
@@ -898,11 +961,11 @@ footer.fixed-footer {
       "course pct"
       "pal    rem"
       "status status" !important;
-    gap: 8px 10px !important;
+    gap: 6px 8px !important;
     background: var(--surface) !important;
     border: 1px solid var(--border) !important;
     border-radius: 6px !important;
-    padding: 12px 14px !important;
+    padding: 10px 12px !important;
     box-sizing: border-box !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -1333,13 +1396,11 @@ footer.fixed-footer {
     </div>
   </header>
 
-  <p class="intro">Reads attendance from dcrustm.samarth.edu.in. Enter your roll number and password to check your attendance.</p>
-
   <form id="form" novalidate>
     <div class="form-inputs">
       <div class="field">
-        <label for="u" class="field-label">Roll number</label>
-        <input class="form-input" type="text" id="u" name="username" placeholder="Roll number" autocomplete="username" spellcheck="false" required>
+        <label for="u" class="field-label">Roll no.</label>
+        <input class="form-input" type="text" id="u" name="username" placeholder="Roll no." autocomplete="username" spellcheck="false" required>
       </div>
       <div class="field">
         <label for="p" class="field-label">Password</label>
@@ -1985,7 +2046,7 @@ footer.fixed-footer {
       var username = document.getElementById('u').value.trim();
       var password = document.getElementById('p').value;
       if (!username || !password) {
-        showErr('enter roll number and password');
+        showErr('enter roll no. and password');
         return;
       }
       clearErr();
