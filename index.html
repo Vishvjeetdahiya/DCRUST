@@ -9,9 +9,6 @@
 <title>DCRUSTM Attendance</title>
 <meta name="description" content="Check your DCRUSTM attendance from dcrustm.samarth.edu.in. Enter your roll number and password to view class-wise attendance.">
 <meta name="theme-color" content="#000000" id="meta-theme-color">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
 <script src="./config.js"></script>
 <script>
 (function() {
@@ -43,8 +40,8 @@
   --footer-bg: rgba(0, 0, 0, 0.95);
   --details-bg: #060708;
   --shadow: rgba(0, 0, 0, 0.6);
-  --sans: 'Nanum Gothic', sans-serif;
-  --mono: 'Nanum Gothic', sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
 }
 
 [data-theme="light"] {
@@ -75,12 +72,10 @@ html {
   -webkit-text-size-adjust: 100%;
   background: var(--bg);
 }
-html, body, button, input, select, textarea {
-  font-family: 'Nanum Gothic', sans-serif;
-}
 body {
   background: var(--bg);
   color: var(--text);
+  font-family: var(--sans);
   font-size: 15px;
   line-height: 1.6;
   margin: 0;
@@ -209,9 +204,9 @@ header {
   background: var(--surface);
   border: 1px solid var(--border);
   color: var(--text);
-  padding: 0 14px;
-  height: 42px;
-  font-size: 15px;
+  padding: 0 12px;
+  height: 38px;
+  font-size: 14px;
   font-family: inherit;
   border-radius: 4px;
   width: 100%;
@@ -272,9 +267,9 @@ header {
   color: var(--text-dim);
   border: 1px solid var(--border);
   padding: 0 16px;
-  height: 42px;
+  height: 38px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 500;
   font-family: inherit;
   text-decoration: none;
@@ -293,12 +288,12 @@ button[type="submit"] {
   background: var(--submit-bg);
   color: var(--submit-text);
   border: 1px solid var(--border-strong);
-  padding: 0 24px;
-  height: 42px;
+  padding: 0 20px;
+  height: 38px;
   border-radius: 4px;
   font-weight: 600;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -319,7 +314,7 @@ button[type="submit"]:disabled {
     border-radius: 6px;
   }
   .form-inputs {
-    gap: 8px;
+    gap: 7px;
   }
   .field {
     flex-direction: row;
@@ -328,10 +323,10 @@ button[type="submit"]:disabled {
   }
   .field-label {
     margin-bottom: 0;
-    width: 66px;
-    min-width: 66px;
-    font-size: 13px;
-    font-weight: 700;
+    width: 60px;
+    min-width: 60px;
+    font-size: 12.5px;
+    font-weight: 600;
     color: var(--text-dim);
     flex-shrink: 0;
   }
@@ -341,40 +336,33 @@ button[type="submit"]:disabled {
     min-width: 0;
   }
   .form-input {
-    height: 38px;
-    font-size: 14px;
-    padding: 0 10px;
+    height: 33px;
+    font-size: 13px;
+    padding: 0 9px;
   }
   .pw-wrap .form-input {
-    padding-right: 40px;
+    padding-right: 34px;
   }
   .pw-toggle {
-    width: 36px;
+    width: 32px;
   }
   .form-btn-row {
     flex-direction: row;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 9px;
   }
-  .btn-forgot {
-    flex: 1;
+  .btn-forgot,
+  button[type="submit"] {
+    flex: 1 1 0;
     min-width: 0;
-    height: 38px;
-    font-size: 12px;
-    padding: 0 8px;
+    height: 34px;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 0 6px;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  button[type="submit"] {
-    flex: 1.35;
-    min-width: 0;
-    height: 38px;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 0 10px;
-    white-space: nowrap;
   }
 }
 #err {
@@ -1690,7 +1678,7 @@ footer.fixed-footer {
         statusHtml = '<span class="status-pill pill-none">not marked yet</span>';
         if (sched > 0) {
           var initialSafe = Math.floor(0.25 * sched);
-          projMsg = 'No classes held yet. <strong>' + sched + '</strong> total classes scheduled for semester. You can safely bunk up to <strong>' + initialSafe + '</strong> classes while keeping attendance &ge; 75%.';
+          projMsg = 'No classes held yet (<strong>' + sched + '</strong> scheduled). Safe bunks: <strong>' + initialSafe + '</strong> (&ge; 75%).';
         }
       } else if (c.pct >= 75) {
         var rawSafeNow = Math.floor((c.present - 0.75 * c.total) / 0.75);
@@ -1746,7 +1734,7 @@ footer.fixed-footer {
       var records = c.records || [];
       var recContent = '';
       if (records.length === 0) {
-        recContent = '<div class="no-records">No attendance records have been marked on the portal yet for this class.</div>';
+        recContent = '<div class="no-records">no attendance records</div>';
       } else {
         recContent = '<div class="records-grid" id="rec-grid-' + i + '">';
         for (var r = 0; r < records.length; r++) {
@@ -1777,7 +1765,6 @@ footer.fixed-footer {
       var detailsHtml = '<div class="details-wrap">'
         + '<div class="details-header">'
         + '<div class="details-title-row">'
-        + '<span class="details-title">Class Log: ' + esc(c.code) + '</span>'
         + '<span class="details-teacher">Teacher: ' + esc(c.teacher || '--') + '</span>'
         + (sched > 0 ? '<span class="details-stat">' + rem + ' of ' + sched + ' classes left</span>' : '')
         + '</div>'
