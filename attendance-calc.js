@@ -38,9 +38,9 @@
    * @param {number} [course.remaining] - Optional remaining classes (computed if omitted)
    * @param {Object} [options]
    * @param {number} [options.threshold=0.75] - Attendance threshold ratio (default: 0.75 for 75%)
-   * @param {'evaluated'|'excused'|'credit'} [options.leaveRule='evaluated'] - How leaves are treated:
-   *        - 'evaluated': leaves count as held classes not attended (present / (present + absent + leave))
+   * @param {'excused'|'evaluated'|'credit'} [options.leaveRule='excused'] - How leaves are treated:
    *        - 'excused': leaves are excused from attendance requirement (present / (present + absent))
+   *        - 'evaluated': leaves count as held classes not attended (present / (present + absent + leave))
    *        - 'credit': leaves count as attended ( (present + leave) / (present + absent + leave) )
    * @returns {Object} Calculated metrics
    */
@@ -51,7 +51,7 @@
     var threshold = (typeof options.threshold === 'number' && options.threshold > 0 && options.threshold < 1)
       ? options.threshold
       : DEFAULT_THRESHOLD;
-    var leaveRule = options.leaveRule || 'evaluated';
+    var leaveRule = options.leaveRule || 'excused';
 
     var present = Math.max(0, parseInt(course.present, 10) || 0);
     var absent = Math.max(0, parseInt(course.absent, 10) || 0);
@@ -269,7 +269,7 @@
     var threshold = (typeof options.threshold === 'number' && options.threshold > 0 && options.threshold < 1)
       ? options.threshold
       : DEFAULT_THRESHOLD;
-    var leaveRule = options.leaveRule || 'evaluated';
+    var leaveRule = options.leaveRule || 'excused';
 
     var totalPresent = 0;
     var totalAbsent = 0;
