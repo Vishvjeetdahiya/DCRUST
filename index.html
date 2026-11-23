@@ -11,78 +11,6 @@
 <meta name="theme-color" content="#000000" id="meta-theme-color">
 <script src="./config.js"></script>
 <script src="./attendance-calc.js"></script>
-<!-- Slow-portal notice popup -->
-<div class="notice-scrim" id="notice-scrim" hidden
-     role="dialog" aria-modal="true"
-     aria-labelledby="notice-title" aria-describedby="notice-text"
-     tabindex="-1">
-  <div class="notice-card">
-    <h2 class="notice-title" id="notice-title">Samarth is running slow</h2>
-    <p class="notice-text" id="notice-text">The Samarth portal is responding slowly right now, so this site may take longer than usual to load your attendance. Please wait a few seconds after tapping Check attendance.</p>
-    <button type="button" class="notice-close" id="notice-close" aria-label="Close">
-      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </div>
-</div>
-<script>
-(function () {
-  'use strict';
-  if (window.DCRUSTM_NOTICE === false) return;
-
-  var scrim = document.getElementById('notice-scrim');
-  var closeBtn = document.getElementById('notice-close');
-  if (!scrim || !closeBtn) return;
-
-  var previousFocus = null;
-
-  function openNotice() {
-    previousFocus = document.activeElement;
-    scrim.removeAttribute('hidden');
-    // Force reflow so the transition plays
-    void scrim.offsetWidth;
-    scrim.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    scrim.focus();
-    document.addEventListener('keydown', onKey);
-  }
-
-  function closeNotice() {
-    scrim.classList.remove('show');
-    document.body.style.overflow = '';
-    document.removeEventListener('keydown', onKey);
-    setTimeout(function () {
-      if (!scrim.classList.contains('show')) {
-        scrim.setAttribute('hidden', '');
-      }
-    }, 180);
-    if (previousFocus && previousFocus.focus) {
-      previousFocus.focus();
-    }
-  }
-
-  function onKey(e) {
-    if (e.key === 'Escape') {
-      closeNotice();
-      return;
-    }
-    // Focus trap: only focusable element is the close button
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      closeBtn.focus();
-    }
-  }
-
-  closeBtn.addEventListener('click', closeNotice);
-  scrim.addEventListener('click', function (e) {
-    if (e.target === scrim) closeNotice();
-  });
-
-  openNotice();
-}());
-</script>
-
 <script>
 (function() {
   var t = localStorage.getItem('dcrustm_theme');
@@ -1539,12 +1467,19 @@ footer.fixed-footer {
   background: rgba(0, 0, 0, 0.62);
   opacity: 0;
   transition: opacity 0.18s linear;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
 }
 [data-theme="light"] .notice-scrim {
   background: rgba(20, 24, 32, 0.45);
 }
 .notice-scrim.show {
   opacity: 1;
+}
+.notice-scrim:focus,
+.notice-scrim:focus-visible {
+  outline: none;
 }
 .notice-card {
   position: relative;
@@ -1557,6 +1492,13 @@ footer.fixed-footer {
   box-shadow: 0 18px 50px var(--shadow);
   transform: translateY(14px);
   transition: transform 0.22s ease-out;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.notice-card:focus,
+.notice-card:focus-visible {
+  outline: none;
 }
 .notice-scrim.show .notice-card {
   transform: translateY(0);
@@ -1731,11 +1673,11 @@ footer.fixed-footer {
 </footer>
 
 <!-- Slow-portal notice popup -->
-<div class="notice-scrim" id="notice-scrim" hidden
-     role="dialog" aria-modal="true"
-     aria-labelledby="notice-title" aria-describedby="notice-text"
-     tabindex="-1">
-  <div class="notice-card">
+<div class="notice-scrim" id="notice-scrim" hidden>
+  <div class="notice-card" id="notice-card"
+       role="dialog" aria-modal="true"
+       aria-labelledby="notice-title" aria-describedby="notice-text"
+       tabindex="-1">
     <h2 class="notice-title" id="notice-title">Samarth is running slow</h2>
     <p class="notice-text" id="notice-text">The Samarth portal is responding slowly right now, so this site may take longer than usual to load your attendance. Please wait a few seconds after tapping Check attendance.</p>
     <button type="button" class="notice-close" id="notice-close" aria-label="Close">
@@ -1751,6 +1693,7 @@ footer.fixed-footer {
   if (window.DCRUSTM_NOTICE === false) return;
 
   var scrim = document.getElementById('notice-scrim');
+  var card = document.getElementById('notice-card');
   var closeBtn = document.getElementById('notice-close');
   if (!scrim || !closeBtn) return;
 
@@ -1763,7 +1706,7 @@ footer.fixed-footer {
     void scrim.offsetWidth;
     scrim.classList.add('show');
     document.body.style.overflow = 'hidden';
-    scrim.focus();
+    if (card) card.focus();
     document.addEventListener('keydown', onKey);
   }
 
